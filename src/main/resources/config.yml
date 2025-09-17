@@ -1,0 +1,18 @@
+# GMPermissions Configuration
+
+# Debug option (ENABLE ONLY IF YOU KNOW WHAT YOU'RE DOING)
+debug:
+  enabled: false
+
+# Permission settings
+permissions:
+  # If true, having any specific gamemode permission automatically grants base permission
+  # If false, you should give a "minecraft.command.gamemode" permission for command to work
+  autoGrantBasePermission: true
+
+# Custom permission messages using MiniMessage format
+messages:
+  # Placeholders: %gamemode%
+  # Supports hex colors, gradients, formatting, etc.
+  noPermission: "<red>You don't have permission to change to <yellow>%gamemode%</yellow> mode.</red>"
+  invalidGamemode: "<red>Invalid gamemode. Use: <yellow>survival</yellow>, <yellow>creative</yellow>, <yellow>adventure</yellow>, or <yellow>spectator</yellow></red>"

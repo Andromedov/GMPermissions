@@ -1,0 +1,32 @@
+name: GMPermissions
+version: '1.0-SNAPSHOT'
+main: me.andromedov.GMPermissions.GMPermissions
+api-version: '1.21'
+authors: [ Andromedov ]
+description: "Splits gamemode permissions into specific permissions for each gamemode"
+website: https://github.com/Andromedov/GMPermissions
+
+permissions:
+  gmpermissions.admin:
+    description: "Allows access to plugin administration commands"
+    default: op
+  minecraft.command.gamemode.survival:
+    description: "Allows switching to survival gamemode"
+    default: op
+  minecraft.command.gamemode.creative:
+    description: "Allows switching to creative gamemode"
+    default: op
+  minecraft.command.gamemode.adventure:
+    description: "Allows switching to adventure gamemode"
+    default: op
+  minecraft.command.gamemode.spectator:
+    description: "Allows switching to spectator gamemode"
+    default: op
+  minecraft.command.gamemode.*:
+    description: "Allows switching to all gamemodes"
+    default: op
+    children:
+      minecraft.command.gamemode.survival: true
+      minecraft.command.gamemode.creative: true
+      minecraft.command.gamemode.adventure: true
+      minecraft.command.gamemode.spectator: true
