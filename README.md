@@ -47,9 +47,9 @@ The wildcard permission `minecraft.command.gamemode.*` automatically includes al
 
 ### Requirements
 
-- **Server**: Paper 1.21+ (Tester only on 1.21.8)
+- **Server**: Paper 1.21+ (Tested on 1.21 & 1.21.8)
 - **Java**: Java 21 or higher
-- **Permission Plugin**: LuckPerms, GroupManager, or compatible permission plugin
+- **Permission Plugin**: LuckPerms, GroupManager, or any other compatible permission plugin
 
 ## ⚙️ Configuration
 
