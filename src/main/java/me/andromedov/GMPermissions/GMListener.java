@@ -1,6 +1,7 @@
 package me.andromedov.GMPermissions;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,11 +22,18 @@ public class GMListener implements Listener {
     }
 
     private static final Map<String, String> GAMEMODE_PERMISSIONS = new HashMap<>();
+    private static final Map<String, GameMode> GAMEMODE_MAP = new HashMap<>();
+
     static {
         GAMEMODE_PERMISSIONS.put("survival", "minecraft.command.gamemode.survival");
         GAMEMODE_PERMISSIONS.put("creative", "minecraft.command.gamemode.creative");
         GAMEMODE_PERMISSIONS.put("adventure", "minecraft.command.gamemode.adventure");
         GAMEMODE_PERMISSIONS.put("spectator", "minecraft.command.gamemode.spectator");
+
+        GAMEMODE_MAP.put("survival", GameMode.SURVIVAL);
+        GAMEMODE_MAP.put("creative", GameMode.CREATIVE);
+        GAMEMODE_MAP.put("adventure", GameMode.ADVENTURE);
+        GAMEMODE_MAP.put("spectator", GameMode.SPECTATOR);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -34,7 +42,6 @@ public class GMListener implements Listener {
         String message = event.getMessage();
 
         plugin.debug("Player " + player.getName() + " executed command: " + message);
-
         if (handleGamemodeCommand(player, message)) {
             plugin.debug("Command blocked for player " + player.getName());
             event.setCancelled(true);
@@ -47,10 +54,13 @@ public class GMListener implements Listener {
         String command = event.getCommand();
 
         plugin.debug("Server command executed: /" + command);
-
-        if (handleGamemodeCommand(sender, "/" + command)) {
-            plugin.debug("Server command blocked");
-            event.setCancelled(true);
+        if (sender instanceof Player) {
+            if (handleGamemodeCommand(sender, "/" + command)) {
+                plugin.debug("Server command (from player) blocked");
+                event.setCancelled(true);
+            }
+        } else {
+            plugin.debug("Server command (from console/block) ignored by GMPermissions, letting vanilla handle.");
         }
     }
 
@@ -59,22 +69,28 @@ public class GMListener implements Listener {
         if (parts.length == 0) return false;
 
         String command = parts[0].startsWith("/") ? parts[0].substring(1) : parts[0];
-        if (!command.equals("gamemode")) return false;
 
-        plugin.debug("Detected gamemode command: " + command);
-
-        if (parts.length < 2) {
-            plugin.debug("No gamemode specified, allowing vanilla handling");
+        if (!command.equals("gamemode") && !command.equals("minecraft:gamemode")) {
             return false;
         }
 
+        plugin.debug("Detected gamemode command: " + command);
+
+        if (parts.length != 2 || !(sender instanceof Player)) {
+            plugin.debug("Command has target selector or is from console, letting vanilla handle.");
+            return false;
+        }
+
+        Player player = (Player) sender;
         String requestedMode = parts[1].toLowerCase();
+
         String requiredPermission = GAMEMODE_PERMISSIONS.get(requestedMode);
+        GameMode newGameMode = GAMEMODE_MAP.get(requestedMode);
 
         plugin.debug("Requested mode: " + requestedMode + ", Required permission: " + requiredPermission);
 
-        if (requiredPermission == null) {
-            plugin.debug("Invalid gamemode (only full names accepted): " + requestedMode);
+        if (requiredPermission == null || newGameMode == null) {
+            plugin.debug("Invalid gamemode: " + requestedMode);
             sendFormattedMessage(sender, "invalidGamemode", "");
             return true;
         }
@@ -96,13 +112,14 @@ public class GMListener implements Listener {
             return true;
         }
 
-        plugin.debug("Permission check passed, allowing command");
-        return false;
+        plugin.debug("Permission check passed. Executing gamemode change FOR player " + player.getName());
+
+        player.setGameMode(newGameMode);
+        return true;
     }
 
     private void sendFormattedMessage(CommandSender sender, String messageKey, String gamemode) {
         String messageTemplate = plugin.getConfig().getString("messages." + messageKey, "<red>Error: Message not found</red>");
-
         Component message = plugin.parseMessage(messageTemplate, gamemode);
         sender.sendMessage(message);
     }

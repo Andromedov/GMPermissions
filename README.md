@@ -1,9 +1,9 @@
 # GMPermissions - Gamemode Permission Splitter
 
-[![Paper Version](https://img.shields.io/badge/Paper-1.21.8-blue.svg)](https://papermc.io/)
+[![Paper Version](https://img.shields.io/badge/Paper-1.21.10-blue.svg)](https://papermc.io/)
 [![Java Version](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Plugin Version](https://img.shields.io/badge/Version-1.0-brightgreen.svg)](https://github.com/andromedov/gm-permissions/releases)
+[![Plugin Version](https://img.shields.io/badge/Version-1.1.0-brightgreen.svg)](https://github.com/andromedov/gm-permissions/releases)
 
 A lightweight and modern Minecraft Paper plugin that splits the default `minecraft.command.gamemode` permission into specific permissions for each gamemode, providing granular control over player gamemode access. 
 
@@ -177,5 +177,4 @@ If you encounter any issues or have questions:
 
 ### Known Bugs
 
-- ❓ In 1.21 auto-grant base permission is not working
-- ❌ Versions below 1.21 (modern API required)
+- ❌ Versions below 1.21 is not supported (modern API required)
